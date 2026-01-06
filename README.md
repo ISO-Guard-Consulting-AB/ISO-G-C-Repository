@@ -50,4 +50,4 @@ We utilize the **Plan-Do-Check-Act (PDCA)** cycle to ensure continuous improveme
 
 ---
 
-*Last Updated: 2025-12-18* *ISO Guard Consulting AB – Securing your future through standardization.*
+*Last Updated: 2026-01-06* *ISO Guard Consulting AB – Securing your future through standardization.*
