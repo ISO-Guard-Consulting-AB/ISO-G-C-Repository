@@ -1,66 +1,147 @@
-# Kontroll: ISO/IEC 27001:2022 Annex A, 8.21 Säkerhet för nätverkstjänster
+# ISO Guard Consulting
+## Arbetsbeskrivning och Redovisning: ISO/IEC 27001:2022 - 8.21
 
-**Status:** Utkast / Gällande  
-**Dokumentägare:** ISO Guard Consulting AB  
+**Kontroll:** ISO/IEC 27001:2022 Annex A 8.21 – Säkerhet för nätverkstjänster  
 
 ---
 
 ## Innehållsförteckning
-- [1. Syfte](#1-syfte)
-- [2. Omfattning](#2-omfattning)
-- [3. Roller och Ansvar](#3-roller-och-ansvar)
-- [4. Kravställning och Implementation](#4-kravställning-och-implementation)
-- [5. Övervakning och Uppföljning](#5-övervakning-och-uppföljning)
-- [6. Undantag och Avvikelser](#6-undantag-och-avvikelser)
+1. [Beskrivning av kontrollen och dess syfte](#1-beskrivning-av-kontrollen-och-dess-syfte)
+2. [Krav som ställs](#2-krav-som-ställs)
+3. [Implementering i en organisation](#3-implementering-i-en-organisation)
+4. [Min arbetsmetodik (PDCA)](#4-min-arbetsmetodik)
+5. [Risker, utmaningar och förbättringar](#5-risker-utmaningar-och-förbättringar)
+6. [Källhänvisningar](#6-källhänvisningar)
+7. [STYRDOKUMENT: Regler för Säkerhet i Nätverkstjänster](#del-2-färdig-kontroll--styrdokument)
+8. [Teknisk implementering i Microsoft 365](#del-3-teknisk-implementering-i-microsoft-365)
 
 ---
 
-## 1. Syfte
-Syftet med denna riktlinje är att säkerställa skyddet av information som överförs via organisationens nätverkstjänster. Riktlinjen definierar kraven för att identifiera, implementera och övervaka säkerhetsnivåer i nätverkstjänster för att garantera **konfidentialitet**, **riktighet** och **tillgänglighet**.
+## 1. Beskrivning av kontrollen och dess syfte
+Kontroll **8.21 Säkerhet för nätverkstjänster** (*Security of network services*) återfinns under kategorin tekniska kontroller i ISO/IEC 27001:2022. Syftet med kontrollen är att säkerställa säkerheten i de nätverkstjänster som organisationen använder, oavsett om de levereras internt eller (vilket är vanligast) av externa leverantörer.
 
-## 2. Omfattning
-Denna riktlinje omfattar alla nätverkstjänster som organisationen nyttjar, oavsett om tjänsten levereras av en extern part eller av den interna IT-funktionen. Detta inkluderar, men är inte begränsat till:
+> [!NOTE]
+> **Distinktion:** Det är viktigt att skilja denna kontroll från **8.20 Nätverkssäkerhet**.
+> * **8.20** fokuserar på den tekniska säkringen av nätverksinfrastrukturen (routrar, switchar).
+> * **8.21** fokuserar på *tjänsteleveransen* och de krav vi ställer på leverantören av förbindelsen (t.ex. internetleverantörer, molnleverantörer).
 
-* **Externa förbindelser:** Internetleverantörer (ISP), svartfiber och dedikerade molnförbindelser (t.ex. `ExpressRoute` / `Direct Connect`).
-* **Intern nätverksinfrastruktur:** LAN, trådlösa nätverk (WLAN) och gästnätverk.
-* **Fjärraccess och SASE:** VPN-tjänster, SD-WAN och lösningar för säker kantzon (SSE/Global Secure Access).
+Syftet är att garantera **konfidentialitet**, **riktighet** och **tillgänglighet** för information som överförs via dessa tjänster.
 
-## 3. Roller och Ansvar
+## 2. Krav som ställs
+Enligt standarden (ISO 27001:2022 och vägledningen i 27002) krävs det att organisationen ska:
 
-| Roll | Ansvar |
+* **Identifiera:** Fastställa vilka säkerhetsmekanismer och servicenivåer som krävs för respektive nätverkstjänst baserat på risk.
+* **Implementera:** Se till att dessa krav införs, ofta genom avtal (SLA) med leverantörer.
+* **Övervaka:** Löpande verifiera att leverantören faktiskt levererar den överenskomna säkerheten och tillgängligheten.
+
+Specifika krav inkluderar hantering av autentisering till tjänster, kryptering av data i transit samt rätten att granska leverantörens säkerhetsarbete.
+
+## 3. Implementering i en organisation
+För att implementera detta i en svensk organisation (kund till ISO Guard Consulting), exempelvis en kommun eller myndighet som lyder under **MSBFS 2020:7**, krävs en strukturerad process:
+
+1.  **Behovsanalys och Kravställning:** Innan en nätverkstjänst (t.ex. SD-WAN eller Svartfiber) upphandlas, måste informationsägaren klassificera informationen. Om informationen är känslig krävs kryptering (`VPN`/`TLS`) och hög tillgänglighet (redundans).
+2.  **Avtalshantering (SLA):** Säkerhetskraven måste skrivas in i avtalet. Det räcker inte med "99,9% upptid". Avtalet bör specificera hur snabbt leverantören ska rapportera incidenter och hur loggar hanteras.
+3.  **Övervakning:** Organisationen måste etablera en rutin för att granska leveransrapporter. För Microsoft 365 innebär detta att bevaka *"Service Health Dashboard"*. För en internetleverantör (ISP) kan det innebära månatliga avstämningsmöten.
+
+## 4. Min arbetsmetodik
+Som konsult på ISO Guard Consulting skulle jag arbeta enligt **PDCA-modellen**:
+
+
+
+* **Plan:** Jag skulle inventera alla nätverkstjänster (ISP, Moln, VPN) och kontrollera om det finns gällande SLA:er som matchar dagens hotbild. Jag skulle intervjua tjänsteägare för att förstå affärskraven.
+* **Do:** Jag skulle uppdatera avtalen vid omförhandling för att inkludera specifika krav på incidentrapportering (i linje med NIS2). Jag skulle även aktivera automatiserad övervakning i våra system.
+* **Check:** Jag skulle införa kvartalsvisa *"Service Review Meetings"* med våra nyckelleverantörer för att gå igenom incidenter och prestanda.
+* **Act:** Vid upprepade avvikelser skulle jag eskalera enligt avtalets vitesklausuler eller byta leverantör.
+
+## 5. Risker, utmaningar och förbättringar
+
+> [!WARNING]
+> **Risk för Shadow IT**
+> En betydande risk är att avdelningar köper egna molntjänster/nätverkslösningar utan att involvera IT-säkerhet, vilket leder till att kontroll 8.21 kringgås.
+
+En annan utmaning är beroendet av stora leverantörer (t.ex. Microsoft eller Telia) där det är svårt för en mindre organisation att förhandla om villkoren i ett standardavtal (SLA).
+
+**Förbättringsmöjlighet:** Använda automatiserad övervakning (**SIEM/SOAR**) för att validera nätverkstjänsterna i realtid, istället för att lita blint på leverantörens månadsrapporter. Genom att implementera **Zero Trust-principer** minskar vi också beroendet av att nätverket i sig måste vara "säkert", då vi istället skyddar identiteten och enheten.
+
+## 6. Källhänvisningar
+- SS-EN ISO/IEC 27001:2022 - Annex A 8.21.
+- SS-EN ISO/IEC 27002:2022 - Vägledning för informationssäkerhetsåtgärder.
+- MSBFS 2020:7 - Föreskrifter om säkerhetsåtgärder i informationssystem (3 kap. Nätverkssäkerhet).
+- Microsoft Learn - Dokumentation för Service Health och Entra ID.
+
+---
+
+# Del 2: Färdig Kontroll / Styrdokument
+*(Detta är dokumentet som ISO Guard Consulting rekommenderar för godkännande)*
+
+## STYRDOKUMENT: Regler för Säkerhet i Nätverkstjänster (A.8.21)
+
+| Metadata | Värde |
 | :--- | :--- |
-| **Tjänsteägare**<br>*(Service Owner)* | Ansvarig för att kravställa säkerhetsnivå och servicenivå (SLA) för specifik nätverkstjänst samt genomföra uppföljning. |
-| **IT-Drift**<br>*(Intern leverantör)* | Ansvarar för att leverera interna nätverkstjänster (t.ex. Wi-Fi) enligt ställda krav. |
-| **ISO Guard Consulting** | Ansvarar för kravställning av kryptografiska standarder och godkännande av eventuella undantag. |
+| **Utgivare** | ISO Guard Consulting |
+| **Dokumentägare** | CISO |
+| **Version** | 2.0 |
+| **Gäller för** | Hela organisationen & Externa leverantörer |
+| **Datum** | 2026-01-13 |
+| **Klassificering** | Intern |
+| **Status** | Gällande |
 
-## 4. Kravställning och Implementation
-Varje nätverkstjänst ska kravställas utifrån den information som transporteras (enligt *Informationsklassningspolicyn*).
+### 1. Syfte
+Syftet med denna riktlinje är att säkerställa att nätverkstjänster som organisationen använder (oavsett om de är interna eller externa) har en säkerhetsnivå som motsvarar verksamhetens krav på tillgänglighet, konfidentialitet och riktighet.
 
-### 4.1 Säkerhetsfunktioner
-Tjänsten ska inkludera tekniska säkerhetsåtgärder för att skydda data i transit:
+### 2. Omfattning
+Dessa regler gäller för alla nätverkstjänster, inklusive men inte begränsat till:
+* Internetleverantörer (ISP).
+* Molntjänster för nätverk (t.ex. Azure ExpressRoute, SD-WAN).
+* VPN- och fjärraccess-tjänster.
+* Trådlösa nätverk (Wi-Fi) som köps som tjänst.
 
-* **Kryptering:** All trafik som passerar publika eller ej betrodda nätverk ska krypteras enligt organisationens gällande Kryptografiska Policy (exempelvis `IPSec` eller `TLS` av aktuell, säker version).
-* **Autentisering:** Tjänsten ska kräva stark autentisering för anslutning. För fjärraccess (`VPN`/`Zero Trust`) krävs alltid Multifaktorautentisering (**MFA**). För intern nätverksaccess ska `802.1x` eller motsvarande portstyrning användas där så är möjligt.
-* **Segregering:** Nätverkstjänsten ska stödja logisk separation. Gästnätverk, IoT-nätverk och produktionsnätverk ska vara isolerade från varandra (t.ex. via `VLAN`/`VRF`) för att förhindra sidoöverflyttning (*lateral movement*).
-* **Skydd mot angrepp:** Leverantören ska tillhandahålla skydd mot överbelastningsattacker (DDoS) och intrångsförsök vid nätverksgränssnittet.
+### 3. Kravställning (Identifiera)
+Innan en nätverkstjänst tas i bruk ska **Tjänsteägaren (Service Owner)** säkerställa att:
+* **Säkerhetskrav:** Tjänsten ska stödja kryptering enligt organisationens kryptopolicy (minst `TLS 1.2` för data i transit).
+* **Autentisering:** Tjänsten ska stödja stark autentisering (MFA) för administrativ åtkomst.
+* **Redundans:** För kritiska tjänster ska redundanta förbindelser finnas för att möta krav på upptid.
 
-### 4.2 Servicenivåer (SLA)
-För alla nätverkstjänster ska ett skriftligt avtal (SLA för externa, OLA för interna) finnas som reglerar:
+### 4. Avtal och SLA (Implementera)
+Alla externa nätverkstjänster ska regleras genom ett skriftligt avtal (Service Level Agreement - SLA) som inkluderar:
+* **Säkerhetsåtgärder:** Leverantörens ansvar för loggning, patchning och fysisk säkerhet.
+* **Incidentrapportering:** Leverantören ska rapportera säkerhetsincidenter till organisationen inom 24 timmar.
+* **Rätt till revision:** Organisationen ska ha rätt att granska leverantörens säkerhetsarbete (t.ex. genom att begära SOC 2-rapporter).
 
-1.  **Tillgänglighet:** Garanterad upptid anpassad efter verksamhetens krav (t.ex. krav på redundanta förbindelser för kritiska sajter).
-2.  **Incidenthantering:** Tidsgränser för hur snabbt leverantören ska detektera och rapportera säkerhetsincidenter till organisationen.
-3.  **Logghantering:** Leverantören ska säkerställa att relevanta säkerhetsloggar sparas och vid behov kan göras tillgängliga för forensisk analys.
+### 5. Övervakning och Uppföljning (Övervaka)
+* **Löpande övervakning:** IT-avdelningen ansvarar för att tekniskt övervaka nätverkstjänsternas tillgänglighet och prestanda.
+* **Avtalsuppföljning:** Minst en gång per år ska Tjänsteägaren genomföra en leverantörsuppföljning för att verifiera att SLA uppfylls och att säkerhetskraven efterlevs.
 
-## 5. Övervakning och Uppföljning
-För att säkerställa att kontroll 8.21 efterlevs över tid ska följande aktiviteter genomföras:
+### 6. Ansvar
+* **Tjänsteägare:** Ansvarar för att kravställa och följa upp avtal.
+* **IT-drift:** Ansvarar för den tekniska övervakningen och incidenthanteringen.
 
-- [ ] **Löpande övervakning:** IT-avdelningen ska övervaka tjänsternas status i realtid. För molnbaserade nätverkstjänster (t.ex. Microsoft Entra Access) ska *"Service Health"*-paneler övervakas.
-- [ ] **Periodisk leverantörsgranskning:** Tjänsteägaren ska minst en gång per år (eller vid större förändringar) utvärdera leverantören. Detta inkluderar genomgång av incidentrapporter, uppfyllnad av SLA samt granskning av leverantörens oberoende revisionsrapporter (t.ex. SOC 2 eller ISO 27001-certifikat).
+---
 
-## 6. Undantag och Avvikelser
+# Del 3: Teknisk implementering i Microsoft 365
+*(Hänvisning till funktion/tjänst som stödjer kontrollen)*
 
-> [!IMPORTANT]
-> **Hantering av risk**
-> Avsteg från denna riktlinje (t.ex. användning av äldre protokoll p.g.a. tekniskt beroende i produktionsutrustning) får endast ske efter genomförd riskanalys.
->
-> Undantaget ska dokumenteras, tidsbegränsas och godkännas av **ISO Guard Consulting/Informationssäkerhetsansvarig**.
+För att uppfylla kontroll 8.21 i en Microsoft 365-miljö rekommenderar **ISO Guard Consulting** användning av följande tjänster:
+
+### 1. Identifiera och Implementera (Accesskontroll)
+**Tjänst:** Microsoft Entra ID (tidigare Azure AD) - *Conditional Access*
+
+* **Funktion:** Vi definierar "Betrodda nätverk" (*Named Locations*) i Entra ID. Genom policyer för villkorad åtkomst (Conditional Access) kan vi styra att anslutningar till nätverkstjänster (som SharePoint eller Teams) endast tillåts från säkra enheter eller kräver MFA om användaren sitter på ett "osäkert" nätverk (t.ex. café-wifi).
+* **Koppling till 8.21:** Detta uppfyller kravet på att implementera säkerhetsmekanismer för anslutning till tjänsten.
+
+
+
+### 2. Övervaka Servicenivåer
+**Tjänst:** Microsoft 365 Service Health Dashboard
+
+* **Funktion:** I Microsoft 365 Admin Center finns en instrumentpanel som visar hälsostatus för alla molntjänster (Exchange, Teams, etc.).
+* **Koppling till 8.21:** Detta är verktyget vi använder för att "övervaka servicenivåer" som standarden kräver. Här ser vi om Microsoft uppfyller sitt SLA gällande upptid.
+
+### 3. Nätverkssäkerhet för distansarbete
+**Tjänst:** Microsoft Entra Internet Access (Global Secure Access)
+
+* **Funktion:** En SSE-lösning (Security Service Edge) som säkrar nätverkstrafiken för användare oavsett var de befinner sig, utan att behöva traditionell VPN.
+* **Koppling till 8.21:** Säkerställer att nätverkstjänsten är skyddad mot hot även utanför kontorets väggar.
+
+---
+© 2026 ISO Guard Consulting. All rights reserved.
