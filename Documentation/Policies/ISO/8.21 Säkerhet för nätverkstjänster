@@ -1,0 +1,109 @@
+# Dokumentation: ISO/IEC 27001:2022 Annex A 8.21 Säkerhet för nätverkstjänster
+
+| Dokumentinformation | |
+| :--- | :--- |
+| **Kund:** | Life Time Learning Institute Sweden |
+| **Leverantör:** | ISO Consulting AB |
+| **Konsult:** | Baiar Yusuf |
+| **Dokumentnamn:** | Säkerhet för nätverkstjänster (A.8.21) |
+| **Dokumentägare (Kund):** | IT-chef / CISO |
+| **Version:** | 1.0 |
+| **Datum:** | 2026-01-13 |
+| **Status:** | För godkännande |
+
+---
+
+## Innehållsförteckning
+
+1. [Del 1: Konsultens Analys och Metod](#del-1-konsultens-analys-och-metod)
+2. [Del 2: Styrdokument (Policy för Institutet)](#del-2-styrdokument-policy-för-institutet)
+3. [Del 3: Teknisk Implementation (Microsoft 365)](#del-3-teknisk-implementation-microsoft-365)
+
+---
+
+# Del 1: Konsultens Analys och Metod
+
+### 1.1 Inledning
+På uppdrag av **Life Time Learning Institute Sweden** har **ISO Consulting AB** genomfört en analys och upprättat styrdokument för att uppfylla kontrollen **ISO/IEC 27001:2022 Annex A 8.21 (Säkerhet för nätverkstjänster)**.
+
+Syftet med detta arbete är att säkerställa att institutets information skyddas vid överföring via nätverk, oavsett om tjänsterna levereras internt eller av externa parter (såsom internetleverantörer eller molnoperatörer).
+
+### 1.2 Nulägesanalys och Risker
+Vid analysen av institutets nätverkstjänster har följande specifika risker och behov identifierats:
+
+* **Distansstudier:** En stor del av verksamheten sker digitalt, vilket ställer höga krav på tillgänglighet och skydd mot avbrott.
+* **Studentnätverk:** Det finns ett behov av att tydligt separera administrativ trafik (personal/betyg) från studenternas och gästernas nätverkstrafik för att förhindra obehörig åtkomst.
+* **Externa leverantörer:** Institutet är beroende av externa leverantörer för internet och molntjänster, där standardavtal (SLA) historiskt inte granskats ur ett säkerhetsperspektiv.
+
+### 1.3 Arbetsmetodik (PDCA)
+ISO Consulting AB har applicerat PDCA-modellen (*Plan-Do-Check-Act*) för att strukturera arbetet:
+
+1.  **Plan:** Vi har inventerat institutets nuvarande nätverksavtal och intervjuat ansvariga tjänsteägare.
+2.  **Do:** Vi har tagit fram nedanstående styrdokument (Del 2) samt tekniska konfigurationsförslag (Del 3).
+3.  **Check (Rekommendation):** Institutet bör införa årliga uppföljningsmöten med nyckelleverantörer.
+4.  **Act (Rekommendation):** Vid avvikelser i leverans ska viten krävas eller leverantörsbyte initieras enligt den nya policyn.
+
+---
+
+# Del 2: Styrdokument (Policy för Institutet)
+
+*(Detta avsnitt utgör det formella regelverk som ska gälla internt på Life Time Learning Institute Sweden)*
+
+## Riktlinje: Säkerhet för Nätverkstjänster
+
+| Metadata | |
+| :--- | :--- |
+| **Omfattning:** | Hela organisationen (Personal & Studenter) |
+| **Ansvarig:** | CISO / IT-chef |
+| **Giltig från:** | 2026-01-13 |
+
+### 2.1 Syfte
+Syftet med denna riktlinje är att garantera konfidentialitet, riktighet och tillgänglighet för information som överförs via organisationens nätverkstjänster. Riktlinjen säkerställer att vi ställer rätt krav på både interna och externa nätverksleverantörer.
+
+### 2.2 Kravställning vid upphandling (Identifiera)
+Innan en ny nätverkstjänst (t.ex. ny fiberförbindelse eller molntjänst) upphandlas ska **Tjänsteägaren** säkerställa att:
+
+* **Kryptering:** Tjänsten ska stödja stark kryptering (minst TLS 1.2 eller motsvarande VPN-teknik) för all data i transit utanför vårt eget fysiska skydd.
+* **Autentisering:** Administrativ åtkomst till nätverksutrustning eller tjänsteportal ska skyddas med Multifaktorautentisering (MFA).
+* **Separering:** Tjänsten ska stödja logisk separation (t.ex. VLAN) för att kunna skilja på "Student", "Personal" och "Gäst".
+
+### 2.3 Avtal och SLA (Implementera)
+För alla externa nätverkstjänster ska ett Service Level Agreement (SLA) finnas. Avtalet ska reglera:
+
+1.  **Tillgänglighet:** Garanterad upptid (t.ex. 99.5% under kontorstid).
+2.  **Säkerhetsincidenter:** Leverantören är skyldig att rapportera säkerhetsincidenter som påverkar institutet inom max 24 timmar.
+3.  **Loggar:** Relevanta säkerhetsloggar ska sparas av leverantören i minst 90 dagar (eller enligt lagkrav).
+
+### 2.4 Övervakning och Uppföljning (Övervaka)
+* **Teknisk övervakning:** IT-avdelningen ska i realtid övervaka status på kritiska förbindelser (t.ex. via Microsoft 365 Service Health eller brandväggsloggar).
+* **Leverantörsgranskning:** En gång per år ska ansvarig Tjänsteägare utvärdera leverantören mot ställda krav i SLA.
+
+### 2.5 Undantag
+Avsteg från denna riktlinje får endast göras efter en dokumenterad riskanalys och ska godkännas av CISO.
+
+---
+
+# Del 3: Teknisk Implementation (Microsoft 365)
+
+För att tekniskt uppfylla kraven i Del 2 rekommenderar ISO Consulting AB följande konfigurationer i institutets Microsoft 365-miljö:
+
+### 3.1 Accesskontroll och Villkorad Åtkomst
+**Verktyg:** Microsoft Entra ID (Conditional Access)
+
+Vi implementerar policyer som styr hur anslutningar får ske:
+* **Personal:** Kräver alltid MFA och en "Compliant Device" (hanterad enhet) för att komma åt känsliga system via nätverket.
+* **Studenter:** Kräver MFA vid inloggning från okända nätverk utanför campus.
+* **Blockering:** Inloggningsförsök från högriskländer (Geo-blocking) nekas på nätverksnivå.
+
+### 3.2 Övervakning av Tjänstekvalitet
+**Verktyg:** Microsoft 365 Service Health Dashboard
+
+IT-driftgruppen konfigurerar e-postnotifikationer från *Service Health Dashboard* för att omedelbart få information om Microsofts nätverkstjänster (Teams, Exchange) drabbas av driftstörningar. Detta säkerställer att institutet snabbt kan informera lärare och studenter.
+
+### 3.3 Zero Trust Network Access (ZTNA)
+**Verktyg:** Microsoft Entra Internet Access
+
+För att säkra distansarbete går vi ifrån traditionell VPN. Istället används *Global Secure Access* klienten som krypterar trafiken från användarens dator direkt till molntjänsten, oavsett om användaren sitter på ett öppet café-nätverk eller hemma.
+
+---
+*© 2026 ISO Consulting AB. Dokumentet är framtaget för Life Time Learning Institute Sweden.*
