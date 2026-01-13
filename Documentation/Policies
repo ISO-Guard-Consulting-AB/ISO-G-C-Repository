@@ -1,7 +1,7 @@
 # Kontroll: ISO/IEC 27001:2022 Annex A, 8.21 Säkerhet för nätverkstjänster
 
 **Status:** Utkast / Gällande  
-**Dokumentägare:** CISO  
+**Dokumentägare:** ISO Guard Consulting AB  
 
 ---
 
@@ -31,7 +31,7 @@ Denna riktlinje omfattar alla nätverkstjänster som organisationen nyttjar, oav
 | :--- | :--- |
 | **Tjänsteägare**<br>*(Service Owner)* | Ansvarig för att kravställa säkerhetsnivå och servicenivå (SLA) för specifik nätverkstjänst samt genomföra uppföljning. |
 | **IT-Drift**<br>*(Intern leverantör)* | Ansvarar för att leverera interna nätverkstjänster (t.ex. Wi-Fi) enligt ställda krav. |
-| **CISO** | Ansvarar för kravställning av kryptografiska standarder och godkännande av eventuella undantag. |
+| **ISO Guard Consulting** | Ansvarar för kravställning av kryptografiska standarder och godkännande av eventuella undantag. |
 
 ## 4. Kravställning och Implementation
 Varje nätverkstjänst ska kravställas utifrån den information som transporteras (enligt *Informationsklassningspolicyn*).
@@ -63,4 +63,4 @@ För att säkerställa att kontroll 8.21 efterlevs över tid ska följande aktiv
 > **Hantering av risk**
 > Avsteg från denna riktlinje (t.ex. användning av äldre protokoll p.g.a. tekniskt beroende i produktionsutrustning) får endast ske efter genomförd riskanalys.
 >
-> Undantaget ska dokumenteras, tidsbegränsas och godkännas av **CISO/Informationssäkerhetsansvarig**.
+> Undantaget ska dokumenteras, tidsbegränsas och godkännas av **ISO Guard Consulting/Informationssäkerhetsansvarig**.
