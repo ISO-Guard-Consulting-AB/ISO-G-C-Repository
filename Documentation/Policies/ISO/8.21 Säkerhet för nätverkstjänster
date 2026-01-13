@@ -107,3 +107,103 @@ För att säkra distansarbete går vi ifrån traditionell VPN. Istället använd
 
 ---
 *© 2026 ISO Consulting AB. Dokumentet är framtaget för Life Time Learning Institute Sweden.*
+
+
+
+
+
+### Implementeringsplan:
+# Dokumentation: Nätverkssäkerhet (ISO 27001 A.8.21)
+
+| Dokumentinformation | |
+| :--- | :--- |
+| **Organisation:** | Lifetime Learning Institute Sweden |
+| **Dokumentägare:** | CISO |
+| **Gäller för:** | Sverige (Hemmakontor & Molnmiljö) |
+| **Senast uppdaterad:** | 2026-01-13 |
+| **Status:** | Gällande |
+
+---
+
+## 1. Riktlinje för Nätverkssäkerhet och Distansarbete
+*(Policy-nivå: Vad som gäller för personalen)*
+
+### 1.1 Syfte
+Syftet med denna riktlinje är att säkerställa att företagets information skyddas vid överföring över publika nätverk, då företaget saknar fysiskt kontorsnätverk.
+
+### 1.2 Tillåtna Nätverk
+All behandling av företagsdata får endast ske över nätverk som uppfyller följande krav:
+* **Hemmanätverk:** Ska vara skyddade med WPA2-kryptering (eller högre) och ett unikt lösenord. Standardlösenord på routrar ska bytas.
+* **Publika Nätverk (Café/Hotell/Tåg):** Anslutning till öppna, okrypterade nätverk är **förbjudet** om inte en VPN-tunnel eller *Microsoft Global Secure Access* är aktiverad på enheten.
+* **Mobilnät (4G/5G):** Prioriteras framför publika Wi-Fi nätverk vid arbete utanför hemmet.
+
+### 1.3 Separering av Utrustning
+* **Videostudion:** Den stationära datorn för videoproduktion (med RAID5-lagring) ska alltid vara ansluten via nätverkskabel. Wi-Fi ska vara inaktiverat på denna enhet för att maximera stabilitet och säkerhet.
+* **Gästanvändning:** Familjemedlemmar eller utomstående får aldrig ansluta sina enheter till företagets datorer eller använda företagets inloggningar.
+
+---
+
+## 2. Teknisk Specifikation: Konfiguration av Nätverksskydd
+*(Implementations-nivå: Hur vi har ställt in systemen)*
+
+Eftersom infrastrukturen är molnbaserad, definieras nätverkssäkerheten genom logiska regler i **Microsoft 365 (Entra ID)** snarare än i fysiska brandväggar.
+
+### 2.1 Villkorsstyrd Åtkomst (Conditional Access)
+Följande regler är aktiva för att skydda "det virtuella nätverket":
+
+| Regelnamn | Målgrupp | Villkor (If) | Åtgärd (Then) |
+| :---      | :---     | :---         | :---          |
+| **CA-01: Admin Protection** | VD, Education Mgr, Accountant | Försök att nå Admin-portaler | **Kräv:** MFA + Compliant Device (Hanterad enhet) |
+| **CA-02: Geo-Block** | Alla användare | IP-adress från: RU, CN, KP, IR | **Blockera åtkomst** (Block Access) |
+| **CA-03: Risk-Based Login** | Alla användare | "Impossible Travel" eller läckt legitimation | **Kräv:** Lösenordsbyte + MFA |
+
+### 2.2 klientsäkerhet (Endpoint Network Protection)
+Alla 6 laptops (Dell/HP/Samsung) styrs via Microsoft Intune med följande nätverksprofil:
+
+* **Brandvägg:** Alltid PÅ (Microsoft Defender Firewall).
+* **Inkommande trafik:** Blockerad som standard.
+* **Webbskydd:** SmartScreen aktiverat för att blockera skadliga webbplatser.
+* **Kryptering:** TLS 1.2 eller högre krävs för all kommunikation mot servrar.
+
+---
+
+## 3. Nätverksinventering (Topologi)
+*(Beskrivning av miljön)*
+
+Då LLI Sweden saknar central serverhall, definieras nätverket i tre zoner:
+
+### Zon 1: Det Säkra Molnet (Production Zone)
+* **Beskrivning:** Microsoft 365 (SharePoint, Teams, Exchange) samt Fortnox.
+* **Skydd:** Identitetsbaserat skydd (Zero Trust), Kryptering i vila och transit.
+* **Status:** 🟢 Övervakas dygnet runt av leverantör.
+
+### Zon 2: Videostudion (Critical Asset Zone)
+* **Beskrivning:** Fysisk plats (Hyrd lokal/Hemmakontor). Innehåller 1 st högprestandadator + RAID5-lagring.
+* **Skydd:** UPS (Batteribackup), fysiskt skalskydd (låst dörr), trådbundet nätverk bakom router med SPI-brandvägg.
+* **Status:** 🟡 Ansvar hos Education Manager.
+
+### Zon 3: Det Fientliga Nätet (Untrusted Zone)
+* **Beskrivning:** Internet, Hemmanätverk, 4G/5G, Publika Wi-Fi.
+* **Skydd:** Inget nätverksskydd antas finnas. Allt skydd ligger på klientnivå (Datorn) och Applikationsnivå (MFA).
+* **Status:** 🔴 Ses som osäkert.
+
+---
+
+## 4. Leverantörsförteckning & SLA (Service Level Agreements)
+*(Hantering av externa parter enligt A.5.22 och A.8.21)*
+
+| Leverantör | Tjänst | Kontakt/Support | SLA / Förväntad upptid | Reservrutin vid avbrott |
+| :--- | :--- | :--- | :--- | :--- |
+| **Microsoft** | M365 (Core Network) | Admin Portal | 99,9% (Finansiell garanti) | Kontrollera Service Health via mobilapp. |
+| **Kajabi** | Kursplattform | help.kajabi.com | Best effort (SaaS) | Meddela studenter via e-post/Facebook. |
+| **Lokala ISP:er** | Fiber (Hemmakontor) | *(Privata avtal)* | Konsumentklass (Ingen garanti) | **Aktivera Internetdelning (Hotspot) på tjänstemobil.** |
+| **Mobiloperatör** | 4G/5G Data | Företagskundtjänst | Täckningskarta gäller | Arbeta offline (synka senare). |
+
+---
+
+### Bilaga: Incidentrapportering Nätverk
+*Vid misstanke om nätverksintrång eller vid internetavbrott längre än 1 timme:*
+
+1.  **Kontrollera:** Är det bara du eller hela regionen? (Kolla downdetector.se).
+2.  **Rapportera:** Skicka SMS till IT-ansvarig 0771-110 10 10.
+3.  **Åtgärda:** Byt till mobilnät. Om videouppladdning pågår – pausa tills fast lina återfås.
